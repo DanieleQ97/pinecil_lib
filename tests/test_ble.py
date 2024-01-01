@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
-from ble import find_device_addresses, BLE
+from pinecil.ble import find_device_addresses, BLE
 from dataclasses import dataclass
 from test_utils import Method
 
@@ -85,7 +85,7 @@ async def test_find_all_pinecil_addresses():
         MockDevice(name="pinecil-123", address="aa:bb:cc:dd:ee:ff"),
         MockDevice(name="pinecil-abc", address="11:22:33:44:55:66"),
     ]
-    with patch("ble.BleakScanner.discover", return_value=mock_devices):
+    with patch("pinecil.ble.BleakScanner.discover", return_value=mock_devices):
         addrs = await find_device_addresses("pinecil")
 
         assert addrs == ["aa:bb:cc:dd:ee:ff", "11:22:33:44:55:66"]
@@ -93,7 +93,7 @@ async def test_find_all_pinecil_addresses():
 
 @pytest.mark.asyncio
 async def test_ble_can_connect(mock_bleak_client):
-    with patch("ble.BleakClient", return_value=mock_bleak_client):
+    with patch("pinecil.ble.BleakClient", return_value=mock_bleak_client):
         ble = BLE("00:11:22:33:44:55")
         assert not ble.is_connected
 
@@ -104,7 +104,7 @@ async def test_ble_can_connect(mock_bleak_client):
 
 @pytest.mark.asyncio
 async def test_list_available_services_on_device(mock_bleak_client, fake_services):
-    with patch("ble.BleakClient", return_value=mock_bleak_client):
+    with patch("pinecil.ble.BleakClient", return_value=mock_bleak_client):
         ble = BLE("00:11:22:33:44:55")
 
         services = await ble.get_services()
@@ -117,7 +117,7 @@ async def test_list_available_services_on_device(mock_bleak_client, fake_service
 async def test_list_GATT_characteristics_for_a_service(
     mock_bleak_client, fake_services
 ):
-    with patch("ble.BleakClient", return_value=mock_bleak_client):
+    with patch("pinecil.ble.BleakClient", return_value=mock_bleak_client):
         ble = BLE("00:11:22:33:44:55")
         first_svc = next(fake_services)
 
@@ -129,7 +129,7 @@ async def test_list_GATT_characteristics_for_a_service(
 
 @pytest.mark.asyncio
 async def test_can_read_characteristic(mock_bleak_client, fake_services):
-    with patch("ble.BleakClient", return_value=mock_bleak_client):
+    with patch("pinecil.ble.BleakClient", return_value=mock_bleak_client):
         ble = BLE("00:11:22:33:44:55")
         first_svc = next(fake_services)
         first_crx = first_svc.characteristics[0]
@@ -141,7 +141,7 @@ async def test_can_read_characteristic(mock_bleak_client, fake_services):
 
 @pytest.mark.asyncio
 async def test_can_write_characteristic(mock_bleak_client, fake_services):
-    with patch("ble.BleakClient", return_value=mock_bleak_client):
+    with patch("pinecil.ble.BleakClient", return_value=mock_bleak_client):
         ble = BLE("00:11:22:33:44:55")
         first_svc = next(fake_services)
         first_crx = first_svc.characteristics[0]
