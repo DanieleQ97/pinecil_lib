@@ -2,3 +2,13 @@
 .venv
 __pycache__
 poetry.lock
+
+# Packaging stuff
+*.egg
+!/tests/**/*.egg
+/*.egg-info
+/dist/*
+build
+_build
+.cache
+*.so
